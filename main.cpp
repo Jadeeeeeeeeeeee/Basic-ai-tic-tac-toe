@@ -34,7 +34,7 @@ void Game() {
                 }else if (i < 1 || i > 3 || j < 1 || j > 3) {
                     std::cout << "Invalid position! Please try again." << std::endl;
                     continue;
-                }else  if (grid[i - 1][j - 1] != " ") {
+                }else   if (grid[i - 1][j - 1] != " ") {
                         std::cout << "Cell is already occupied! Please try again." << std::endl;
                         continue;
                     }
@@ -190,6 +190,28 @@ void AiMove() {
             grid[1][1] = "0";  // Use assignment operator
             playerOneMove = !playerOneMove;
             return;
+        }
+
+        // AI strategy for placing "0"
+        if (grid[0][0] == "X" && grid[2][2] == " ") {
+            grid[2][2] = "0"; // Place "0" at bottom-right if top-left is "0"
+            playerOneMove = !playerOneMove; // Switch player
+            return; // Exit after making a move
+        }
+        if (grid[0][2] == "X" && grid[2][0] == " ") {
+            grid[2][0] = "0"; // Place "0" at bottom-left if top-right is "0"
+            playerOneMove = !playerOneMove; // Switch player
+            return; // Exit after making a move
+        }
+        if (grid[2][0] == "X" && grid[0][2] == " ") {
+            grid[0][2] = "0"; // Place "0" at top-right if bottom-left is empty
+            playerOneMove = !playerOneMove; // Switch player
+            return; // Exit after making a move
+        }
+        if (grid[2][2] == "X" && grid[0][0] == " ") {
+            grid[0][0] = "0"; // Place "0" at top-left if bottom-right is "0"
+            playerOneMove = !playerOneMove; // Switch player
+            return; // Exit after making a move
         }
 
         // Fallback strategies
