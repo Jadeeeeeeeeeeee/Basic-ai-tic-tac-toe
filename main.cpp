@@ -51,6 +51,173 @@ void Game() {
     }
 }
 
+void AiMove() {
+    bool isEmpty = isGridEmpty();
+    if (!isEmpty) {
+        // Checking for potential win/blocking moves
+        for (int i = 0; i < 3; i++) {
+            // Rows
+            if (grid[i][0] == "X" && grid[i][1] == "X" && grid[i][2] == " ") {
+                grid[i][2] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+            else if (grid[i][0] == " " && grid[i][1] == "X" && grid[i][2] == "X") {
+                grid[i][0] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+            else if (grid[i][0] == "X" && grid[i][1] == " " && grid[i][2] == "X") {
+                grid[i][1] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+        }
+
+        // Columns
+        for (int i = 0; i < 3; i++) {
+            if (grid[0][i] == "X" && grid[1][i] == "X" && grid[2][i] == " ") {
+                grid[2][i] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+            else if (grid[0][i] == " " && grid[1][i] == "X" && grid[2][i] == "X") {
+                grid[0][i] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+            else if (grid[0][i] == "X" && grid[1][i] == " " && grid[2][i] == "X") {
+                grid[1][i] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+        }
+
+        // Diagonals
+        if (grid[0][0] == "X" && grid[1][1] == "X" && grid[2][2] == " ") {
+            grid[2][2] = "0";  // Use assignment operator
+            playerOneMove = !playerOneMove;
+            return;
+        }
+        else if (grid[0][0] == " " && grid[1][1] == "X" && grid[2][2] == "X") {
+            grid[0][0] = "0";  // Use assignment operator
+            playerOneMove = !playerOneMove;
+            return;
+        }
+        else if (grid[0][0] == "X" && grid[1][1] == " " && grid[2][2] == "X") {
+            grid[1][1] = "0";  // Use assignment operator
+            playerOneMove = !playerOneMove;
+            return;
+        }
+
+        // Second diagonal
+        if (grid[0][2] == "X" && grid[1][1] == "X" && grid[2][0] == " ") {
+            grid[2][0] = "0";  // Use assignment operator
+            playerOneMove = !playerOneMove;
+            return;
+        }
+        else if (grid[0][2] == " " && grid[1][1] == "X" && grid[2][0] == "X") {
+            grid[0][2] = "0";  // Use assignment operator
+            playerOneMove = !playerOneMove;
+            return;
+        }
+        else if (grid[0][2] == "X" && grid[1][1] == " " && grid[2][0] == "X") {
+            grid[1][1] = "0";  // Use assignment operator
+            playerOneMove = !playerOneMove;
+            return;
+        }
+
+        // Check for AI winning moves with "0"
+        // Rows
+        for (int i = 0; i < 3; i++) {
+            if (grid[i][0] == "0" && grid[i][1] == "0" && grid[i][2] == " ") {
+                grid[i][2] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+            else if (grid[i][0] == " " && grid[i][1] == "0" && grid[i][2] == "0") {
+                grid[i][0] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+            else if (grid[i][0] == "0" && grid[i][1] == " " && grid[i][2] == "0") {
+                grid[i][1] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+        }
+
+        // Columns
+        for (int i = 0; i < 3; i++) {
+            if (grid[0][i] == "0" && grid[1][i] == "0" && grid[2][i] == " ") {
+                grid[2][i] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+            else if (grid[0][i] == " " && grid[1][i] == "0" && grid[2][i] == "0") {
+                grid[0][i] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+            else if (grid[0][i] == "0" && grid[1][i] == " " && grid[2][i] == "0") {
+                grid[1][i] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+        }
+
+        // Diagonals for "0"
+        if (grid[0][0] == "0" && grid[1][1] == "0" && grid[2][2] == " ") {
+            grid[2][2] = "0";  // Use assignment operator
+            playerOneMove = !playerOneMove;
+            return;
+        }
+        else if (grid[0][0] == " " && grid[1][1] == "0" && grid[2][2] == "0") {
+            grid[0][0] = "0";  // Use assignment operator
+            playerOneMove = !playerOneMove;
+            return;
+        }
+        else if (grid[0][0] == "0" && grid[1][1] == " " && grid[2][2] == "0") {
+            grid[1][1] = "0";  // Use assignment operator
+            playerOneMove = !playerOneMove;
+            return;
+        }
+
+        // Fallback strategies
+        if (grid[1][1] == " ") {
+            grid[1][1] = "0";
+        }
+        else if (grid[0][0] == " ") {
+            grid[0][0] = "0";
+        }
+        else if (grid[0][2] == " ") {
+            grid[0][2] = "0";
+        }
+        else if (grid[2][0] == " ") {
+            grid[2][0] = "0";
+        }
+        else if (grid[2][2] == " ") {
+            grid[2][2] = "0";
+        }
+        else if (grid[0][1] == " ") {
+            grid[0][1] = "0";
+        }
+        else if (grid[1][0] == " ") {
+            grid[1][0] = "0";
+        }
+        else if (grid[1][2] == " ") {
+            grid[1][2] = "0";
+        }
+        else if (grid[2][1] == " ") {
+            grid[2][1] = "0";
+        }
+
+        // Switch turns
+        playerOneMove = !playerOneMove;
+    }
+}
+
+
 
 
 bool isGridEmpty() {
