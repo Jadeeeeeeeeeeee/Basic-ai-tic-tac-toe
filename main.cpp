@@ -25,17 +25,26 @@ void Game() {
             //prints the grid in a grid format
             std::cout << "please enter the y first and x after of youre selected placement (1 - 3)" << std::endl;
             int i, j;
-            std::cin >> i >> j;
-            if (i < 1 || i > 3 || j < 1 || j > 3) {
-                std::cout << "Invalid position! Please try again." << std::endl;
-                continue;
+            while (true) {
+                std::cin >> i >> j;
+                if (std::cin.fail() || i < 1 || i > 3 || j < 1 || j > 3) {
+                    std::cout << "Invalid input! Please enter two numbers between 1 and 3." << std::endl;
+                    std::cin.clear();
+                    std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+                }else if (i < 1 || i > 3 || j < 1 || j > 3) {
+                    std::cout << "Invalid position! Please try again." << std::endl;
+                    continue;
+                }else  if (grid[i - 1][j - 1] != " ") {
+                        std::cout << "Cell is already occupied! Please try again." << std::endl;
+                        continue;
+                    }
+                else {
+                    break; // Valid input
+                }
             }
+           
 
-            // Check if the cell is occupied
-            if (grid[i - 1][j - 1] != " ") {
-                std::cout << "Cell is already occupied! Please try again." << std::endl;
-                continue;
-            }
+          
 
             grid[i - 1][j - 1] = "X";
 
@@ -47,6 +56,7 @@ void Game() {
         }
         else {
             AiMove();
+            checkWin();
         }
     }
 }
@@ -54,9 +64,64 @@ void Game() {
 void AiMove() {
     bool isEmpty = isGridEmpty();
     if (!isEmpty) {
-        // Checking for potential win/blocking moves
+        // Checking for potential blocking moves
         for (int i = 0; i < 3; i++) {
+            // Check for AI winning moves with "0"
             // Rows
+            for (int j = 0; j < 3; j++) {
+                if (grid[i][0] == "0" && grid[i][1] == "0" && grid[i][2] == " ") {
+                    grid[i][2] = "0";  // Use assignment operator
+                    playerOneMove = !playerOneMove;
+                    return;
+                }
+                else if (grid[i][0] == " " && grid[i][1] == "0" && grid[i][2] == "0") {
+                    grid[i][0] = "0";  // Use assignment operator
+                    playerOneMove = !playerOneMove;
+                    return;
+                }
+                else if (grid[i][0] == "0" && grid[i][1] == " " && grid[i][2] == "0") {
+                    grid[i][1] = "0";  // Use assignment operator
+                    playerOneMove = !playerOneMove;
+                    return;
+                }
+            }
+
+            // Columns
+            for (int j = 0; j < 3; j++) {
+                if (grid[0][j] == "0" && grid[1][j] == "0" && grid[2][j] == " ") {
+                    grid[2][j] = "0";  // Use assignment operator
+                    playerOneMove = !playerOneMove;
+                    return;
+                }
+                else if (grid[0][j] == " " && grid[1][j] == "0" && grid[2][j] == "0") {
+                    grid[0][j] = "0";  // Use assignment operator
+                    playerOneMove = !playerOneMove;
+                    return;
+                }
+                else if (grid[0][j] == "0" && grid[1][j] == " " && grid[2][j] == "0") {
+                    grid[1][j] = "0";  // Use assignment operator
+                    playerOneMove = !playerOneMove;
+                    return;
+                }
+            }
+
+            // Diagonals for "0"
+            if (grid[0][0] == "0" && grid[1][1] == "0" && grid[2][2] == " ") {
+                grid[2][2] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+            else if (grid[0][0] == " " && grid[1][1] == "0" && grid[2][2] == "0") {
+                grid[0][0] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+            else if (grid[0][0] == "0" && grid[1][1] == " " && grid[2][2] == "0") {
+                grid[1][1] = "0";  // Use assignment operator
+                playerOneMove = !playerOneMove;
+                return;
+            }
+            // Rows for blocking "X"
             if (grid[i][0] == "X" && grid[i][1] == "X" && grid[i][2] == " ") {
                 grid[i][2] = "0";  // Use assignment operator
                 playerOneMove = !playerOneMove;
@@ -74,26 +139,26 @@ void AiMove() {
             }
         }
 
-        // Columns
-        for (int i = 0; i < 3; i++) {
-            if (grid[0][i] == "X" && grid[1][i] == "X" && grid[2][i] == " ") {
-                grid[2][i] = "0";  // Use assignment operator
+        // Columns for blocking "X"
+        for (int j = 0; j < 3; j++) {
+            if (grid[0][j] == "X" && grid[1][j] == "X" && grid[2][j] == " ") {
+                grid[2][j] = "0";  // Use assignment operator
                 playerOneMove = !playerOneMove;
                 return;
             }
-            else if (grid[0][i] == " " && grid[1][i] == "X" && grid[2][i] == "X") {
-                grid[0][i] = "0";  // Use assignment operator
+            else if (grid[0][j] == " " && grid[1][j] == "X" && grid[2][j] == "X") {
+                grid[0][j] = "0";  // Use assignment operator
                 playerOneMove = !playerOneMove;
                 return;
             }
-            else if (grid[0][i] == "X" && grid[1][i] == " " && grid[2][i] == "X") {
-                grid[1][i] = "0";  // Use assignment operator
+            else if (grid[0][j] == "X" && grid[1][j] == " " && grid[2][j] == "X") {
+                grid[1][j] = "0";  // Use assignment operator
                 playerOneMove = !playerOneMove;
                 return;
             }
         }
 
-        // Diagonals
+        // Diagonals for blocking "X"
         if (grid[0][0] == "X" && grid[1][1] == "X" && grid[2][2] == " ") {
             grid[2][2] = "0";  // Use assignment operator
             playerOneMove = !playerOneMove;
@@ -110,7 +175,7 @@ void AiMove() {
             return;
         }
 
-        // Second diagonal
+        // Second diagonal for blocking "X"
         if (grid[0][2] == "X" && grid[1][1] == "X" && grid[2][0] == " ") {
             grid[2][0] = "0";  // Use assignment operator
             playerOneMove = !playerOneMove;
@@ -122,62 +187,6 @@ void AiMove() {
             return;
         }
         else if (grid[0][2] == "X" && grid[1][1] == " " && grid[2][0] == "X") {
-            grid[1][1] = "0";  // Use assignment operator
-            playerOneMove = !playerOneMove;
-            return;
-        }
-
-        // Check for AI winning moves with "0"
-        // Rows
-        for (int i = 0; i < 3; i++) {
-            if (grid[i][0] == "0" && grid[i][1] == "0" && grid[i][2] == " ") {
-                grid[i][2] = "0";  // Use assignment operator
-                playerOneMove = !playerOneMove;
-                return;
-            }
-            else if (grid[i][0] == " " && grid[i][1] == "0" && grid[i][2] == "0") {
-                grid[i][0] = "0";  // Use assignment operator
-                playerOneMove = !playerOneMove;
-                return;
-            }
-            else if (grid[i][0] == "0" && grid[i][1] == " " && grid[i][2] == "0") {
-                grid[i][1] = "0";  // Use assignment operator
-                playerOneMove = !playerOneMove;
-                return;
-            }
-        }
-
-        // Columns
-        for (int i = 0; i < 3; i++) {
-            if (grid[0][i] == "0" && grid[1][i] == "0" && grid[2][i] == " ") {
-                grid[2][i] = "0";  // Use assignment operator
-                playerOneMove = !playerOneMove;
-                return;
-            }
-            else if (grid[0][i] == " " && grid[1][i] == "0" && grid[2][i] == "0") {
-                grid[0][i] = "0";  // Use assignment operator
-                playerOneMove = !playerOneMove;
-                return;
-            }
-            else if (grid[0][i] == "0" && grid[1][i] == " " && grid[2][i] == "0") {
-                grid[1][i] = "0";  // Use assignment operator
-                playerOneMove = !playerOneMove;
-                return;
-            }
-        }
-
-        // Diagonals for "0"
-        if (grid[0][0] == "0" && grid[1][1] == "0" && grid[2][2] == " ") {
-            grid[2][2] = "0";  // Use assignment operator
-            playerOneMove = !playerOneMove;
-            return;
-        }
-        else if (grid[0][0] == " " && grid[1][1] == "0" && grid[2][2] == "0") {
-            grid[0][0] = "0";  // Use assignment operator
-            playerOneMove = !playerOneMove;
-            return;
-        }
-        else if (grid[0][0] == "0" && grid[1][1] == " " && grid[2][2] == "0") {
             grid[1][1] = "0";  // Use assignment operator
             playerOneMove = !playerOneMove;
             return;
@@ -236,22 +245,26 @@ void checkWin() {
     for (int i = 0; i < 3; i++) {
         // Rows
         if (grid[i][0] == "X" && grid[i][1] == "X" && grid[i][2] == "X") {
+            printGrid();
             std::cout << "Player 1 (X) wins!" << std::endl;
             endGame = true;
             return; // Exit checkWin after announcing the winner
         }
-        if (grid[i][0] == "O" && grid[i][1] == "O" && grid[i][2] == "O") {
+        if (grid[i][0] == "0" && grid[i][1] == "0" && grid[i][2] == "0") {
+            printGrid();
             std::cout << "AI wins" << std::endl;
             endGame = true;
             return; // Exit checkWin after announcing the winner
         }
         // Columns
         if (grid[0][i] == "X" && grid[1][i] == "X" && grid[2][i] == "X") {
+            printGrid();
             std::cout << "Player 1 (X) wins!" << std::endl;
             endGame = true;
             return; // Exit checkWin after announcing the winner
         }
-        if (grid[0][i] == "O" && grid[1][i] == "O" && grid[2][i] == "O") {
+        if (grid[0][i] == "0" && grid[1][i] == "0" && grid[2][i] == "0") {
+            printGrid();
             std::cout << "AI wins" << std::endl;
             endGame = true;
             return; // Exit checkWin after announcing the winner
@@ -260,21 +273,25 @@ void checkWin() {
 
     // Diagonals
     if (grid[0][0] == "X" && grid[1][1] == "X" && grid[2][2] == "X") {
+        printGrid();
         std::cout << "Player 1 (X) wins!" << std::endl;
         endGame = true;
         return; // Exit checkWin after announcing the winner
     }
-    if (grid[0][0] == "O" && grid[1][1] == "O" && grid[2][2] == "O") {
+    if (grid[0][0] == "0" && grid[1][1] == "0" && grid[2][2] == "0") {
+        printGrid();
         std::cout << "AI wins" << std::endl;
         endGame = true;
         return; // Exit checkWin after announcing the winner
     }
     if (grid[0][2] == "X" && grid[1][1] == "X" && grid[2][0] == "X") {
+        printGrid();
         std::cout << "Player 1 (X) wins!" << std::endl;
         endGame = true;
         return; // Exit checkWin after announcing the winner
     }
-    if (grid[0][2] == "O" && grid[1][1] == "O" && grid[2][0] == "O") {
+    if (grid[0][2] == "0" && grid[1][1] == "0" && grid[2][0] == "0") {
+        printGrid();
         std::cout << "AI wins" << std::endl;
         endGame = true;
         return; // Exit checkWin after announcing the winner
@@ -294,6 +311,7 @@ bool checkDraw() {
             }
         }
     }
+    printGrid();
     std::cout << "It's a draw!" << std::endl;
     return true; // The grid is full
 }
@@ -327,22 +345,20 @@ void Start() {
 }
 
 int main() {
+    endGame = false; // Initialize endGame at the start
     do {
-        // Check if the game has ended
         if (endGame) {
-    
-            std::cin.ignore(); // Clear any leftover newline
-           
-            // Reset the game state
+            std::cin.ignore();
             endGame = false; // Reset the end game flag
+            playerOneMove = true;
+
             // Reset the grid
             for (int i = 0; i < 3; i++) {
                 for (int j = 0; j < 3; j++) {
-                    grid[i][j] = " "; // Resetting the grid for a new game
+                    grid[i][j] = " ";
                 }
             }
         }
         Start();
-    } while (true); // This loop continues until the program is exited.
-    return 0;
+    } while (true);
 }
